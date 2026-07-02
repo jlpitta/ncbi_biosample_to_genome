@@ -13,6 +13,7 @@ Dado um arquivo de texto com um BioSample por linha, o script resolve o Assembly
 - [Uso](#uso)
 - [Estrutura de saída](#estrutura-de-saída)
 - [Exemplo completo](#exemplo-completo)
+- [Testando com a lista de exemplo](#testando-com-a-lista-de-exemplo)
 - [Limitações conhecidas](#limitações-conhecidas)
 
 ## Visão geral
@@ -126,6 +127,29 @@ mamba activate baixagenomasbiosample
 
 ls resultado/genomas/
 ```
+
+## Testando com a lista de exemplo
+
+O repositório inclui `biosamples_teste.txt`, uma lista real com 106 BioSamples usada durante o desenvolvimento e validação do script. Ela serve tanto para verificar rapidamente se o ambiente está corretamente configurado quanto como referência de formato de entrada.
+
+Para rodar o teste:
+
+```bash
+mamba activate baixagenomasbiosample
+
+./ncbi_biosample_to_genome.sh -i biosamples_teste.txt -o teste_saida
+
+ls teste_saida/genomas/
+```
+
+Como a lista tem 106 entradas e há uma pausa de 5 segundos entre cada uma, a execução completa leva pelo menos ~9 minutos, sem contar o tempo de download de cada genoma. Para um teste mais rápido, sem esperar a lista inteira, gere um arquivo reduzido com as primeiras linhas:
+
+```bash
+head -n 5 biosamples_teste.txt > biosamples_teste_mini.txt
+./ncbi_biosample_to_genome.sh -i biosamples_teste_mini.txt -o teste_saida_mini
+```
+
+Um teste bem-sucedido deve gerar um arquivo `.fna` em `teste_saida/genomas/` para cada BioSample que tenha um Assembly público associado no NCBI. BioSamples sem Assembly vinculado são pulados e reportados no log de execução, o que é esperado e não indica falha do script.
 
 ## Limitações conhecidas
 
